@@ -1,5 +1,5 @@
 clear;clc;
-load data2016;
+load data2015;
 [n,p]=size(score);
 for j=1:1000
     D=score;
@@ -40,7 +40,7 @@ for j=1:1000
 C=corrcoef(D);
 for i3=1:length(t)
         C_l=C(k(i3),:);
-        ouridx=find(C_l<0.425); %the optimal threshold is produced by the experiments with missing single value.
+        ouridx=find(C_l<0.35); %the optimal threshold is produced by the experiments with missing single value.
         C_l(ouridx)=0;
         for i4=1:n
             new(i4)=sum((D(i4,:).*C_l)/sum(C_l));
@@ -96,17 +96,17 @@ for i3=1:length(t)
 %==================================================
 %knn 
 
-   K=16;%:40 %set different K-values.
+   K=17;%:40 %set different K-values.
 %tic;
     knndist=pdist(D);
     knndist=squareform(knndist); %calculate the distances based on the other sujects.
     for i9=1:length(t)
         dis_n=knndist(t(i9),:);
         [kk ll]=sort(dis_n);
-        neighbor=ll(1:K+1);
-        neighbor_dis=kk(1:K+1);
+        neighbor=ll(1:K);
+        neighbor_dis=kk(1:K);
        
-        preknn(t(i9),k(i9))= sum(D(neighbor,k(i9)))/(K+1);
+        preknn(t(i9),k(i9))= sum(D(neighbor,k(i9)))/K;
         Eknn(i9)=sum(abs(preknn(t(i9),k(i9))-score(t(i9),k(i9))));
     end
     maeknn(j)=mean(Eknn(:));
